@@ -26,7 +26,7 @@ True
 -}
 
 saludable :: Gimnasta -> Bool
-saludable gimnasta = (not.esObeso) gimnasta && ((>5).coeficienteTonificacion) gimnasta  
+saludable gimnasta = (not.esObeso) gimnasta && ((>5).coeficienteTonificacion)  gimnasta
 
 esObeso :: Gimnasta -> Bool
 esObeso = (>100).peso
@@ -54,4 +54,68 @@ quemarCalorias gimnasta calorias
 
 efectoGimnasta :: Float -> Gimnasta -> Calorias -> Gimnasta
 efectoGimnasta numero gimnasta calorias = Gimnasta {nombre = nombre gimnasta, edad = edad gimnasta, peso = (peso gimnasta) - (numero), coeficienteTonificacion = coeficienteTonificacion gimnasta}
+
+--PUNTO 3--
+
+{-
+Desarrollar las funciones para los ejercicios caminataEnCinta, entrenamientoEnCinta, pesas, colina y montania sabiendo que:
+La cinta quema calorías en función de la velocidad promedio alcanzada durante el ejercicio, quemando 1 caloría por la 
+velocidad promedio por minuto.
+La caminata es un ejercicio en cinta con velocidad constante de 5 km/h. 
+> caminataEnCinta 40 pancho 
+Gimnasta "Francisco" 40.0 118.6 1.0 ­­­ --quema 200 calorías (1*5*40) 
+El entrenamiento en cinta arranca en 6 km/h y cada 5 minutos incrementa la velocidad en 1 km/h, con lo cual la 
+velocidad máxima dependerá de los minutos de entrenamiento.
+> entrenamientoEnCinta 40 pancho 
+Gimnasta "Francisco" 40.0 117.3 1.0 ­­­ --quema 400 calorías (1* ((6+14)/2) * 40) 
+-}
+
+type Velocidad = Float
+
+type Minutos = Float
+
+type Ejercicio = (Gimnasta -> Minutos -> Gimnasta)
+
+type Kilos = Float
+
+type Inclinacion = Float
+
+cinta :: Velocidad -> Ejercicio
+cinta velocidad gimnasta minutos = quemarCalorias gimnasta (velocidad * minutos) 
+
+caminataEnCinta = cinta 5
+
+entrenamientoEnCinta :: Ejercicio
+entrenamientoEnCinta  gimnasta minutos = quemarCalorias gimnasta (((5 + 14) / 2) * minutos)
+
+pesas = condicionPesas
+
+condicionPesas :: Kilos -> Ejercicio
+condicionPesas kilos gimnasta minutos 
+ | (kilos > 10) = tonificar kilos (/10) gimnasta minutos
+ | otherwise = gimnasta
+
+tonificar :: Kilos -> (Float -> Float) -> Ejercicio
+tonificar kilos operacion gimnasta minutos = Gimnasta {nombre = nombre gimnasta, edad = edad gimnasta, peso = peso gimnasta, coeficienteTonificacion = coeficienteTonificacion gimnasta + (operacion kilos)}
+
+
+colina :: Inclinacion -> Ejercicio
+colina inclinacion gimnasta minutos = quemarCalorias gimnasta (2 * minutos * inclinacion)
+
+
+montania :: Inclinacion -> Ejercicio
+montania inclinacion gimnasta minutos = tonificar 0 (+1) (colina (inclinacion + 3) (colina inclinacion gimnasta (minutos / 2)) (minutos / 2)) minutos
+
+
+--PUNTO 4--
+
+
+
+
+
+
+
+
+
+
 
