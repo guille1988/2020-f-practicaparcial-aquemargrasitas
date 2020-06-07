@@ -126,12 +126,15 @@ rutinaFlaca = Rutina "Rutina Flaca" 3 [caminataEnCinta]
 
 rutinaTeHagoVerga = Rutina "Rutina te hago verga" 120 listaDeEjercicioDefault
 
---aplicarRutinaJugador :: Rutina -> Gimnasta -> Gimnasta
---aplicarRutinaJugador rutina gimnasta= foldr ($) gimnasta (listaDeEjercicios rutina)
+-- Dada una Rutina (es un Data con un nombre, duración total y lista de ejercicios específicos) y un gimnasta, obtener al gimnasta luego de realizar la rutina. La cantidad de minutos dedicada a cada ejercicio es la misma. 
 
+aplicarRutinaJugador :: Rutina -> Gimnasta -> Gimnasta
+aplicarRutinaJugador rutina gimnasta = foldr (hacerEjercicio rutina) gimnasta (listaDeEjercicios rutina)
 
+hacerEjercicio :: Rutina -> Ejercicio -> Gimnasta -> Gimnasta
+hacerEjercicio rutina ejercicio gimnasta = ejercicio gimnasta (cantidadDeMinutosDedicadaACadaEjercicio rutina)
  
-
+cantidadDeMinutosDedicadaACadaEjercicio rutina = (duracionRutina rutina) / (fromIntegral.length) (listaDeEjercicios rutina)
 
 
 
