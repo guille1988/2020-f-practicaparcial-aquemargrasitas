@@ -109,7 +109,7 @@ montania inclinacion gimnasta minutos = tonificar 0 (+1) (colina (inclinacion + 
 
 --PUNTO 4--
 
---1--
+--A--
 
 data Rutina = Rutina {
 nombreRutina :: String,
@@ -120,13 +120,37 @@ listaDeEjercicios :: [Ejercicio]
 listaDeEjercicioDefault :: [Ejercicio]
 listaDeEjercicioDefault = [caminataEnCinta, entrenamientoEnCinta, pesas 50, colina 20, montania 30]
 
+--1)
 --Un ejemplo de uso es hacer diferentes tipos de  rutina de ejercicios con nombre para aplicarsela a algun gimnasta--
 
 rutinaFlaca = Rutina "Rutina Flaca" 3 [caminataEnCinta]
 
 rutinaTeHagoVerga = Rutina "Rutina te hago verga" 120 listaDeEjercicioDefault
 
--- Dada una Rutina (es un Data con un nombre, duración total y lista de ejercicios específicos) y un gimnasta, obtener al gimnasta luego de realizar la rutina. La cantidad de minutos dedicada a cada ejercicio es la misma. 
+--2)
+--Solucion recursiva
+{-
+modificarParte :: Parte -> Parte
+modificarParte unaParte = unaParte {defensa = defensa unaParte + 1 }
+
+defensaParte :: [Parte] -> [Parte]
+defensaParte [] = []
+defensaParte [x] = modificarParte x : []
+defensaParte (x:y:xs) = modificarParte x : y : defensaParte xs
+solucionRecursiva :: Rutina -> Gimnasta -> Gimnasta
+solucionRecursiva rutina gimnasta 
+-}
+
+aplicarRutinaRecursivaJugador :: [Ejercicio] -> Gimnasta -> Minutos -> Gimnasta
+aplicarRutinaRecursivaJugador [] gimnasta minutos = gimnasta 
+aplicarRutinaRecursivaJugador [x] gimnasta minutos = x  gimnasta minutos
+aplicarRutinaRecursivaJugador (x:xs) gimnasta minutos = aplicarRutinaRecursivaJugador xs (x gimnasta minutos) minutos
+
+solucionRecursiva :: Rutina -> Gimnasta -> Gimnasta
+solucionRecursiva rutina gimnasta = aplicarRutinaRecursivaJugador (listaDeEjercicios rutina) gimnasta (duracionRutina rutina)
+
+--3)
+--Solucion con fold
 
 aplicarRutinaJugador :: Rutina -> Gimnasta -> Gimnasta
 aplicarRutinaJugador rutina gimnasta = foldr (hacerEjercicio rutina) gimnasta (listaDeEjercicios rutina)
@@ -135,6 +159,15 @@ hacerEjercicio :: Rutina -> Ejercicio -> Gimnasta -> Gimnasta
 hacerEjercicio rutina ejercicio gimnasta = ejercicio gimnasta (cantidadDeMinutosDedicadaACadaEjercicio rutina)
  
 cantidadDeMinutosDedicadaACadaEjercicio rutina = (duracionRutina rutina) / (fromIntegral.length) (listaDeEjercicios rutina)
+
+--B--
+
+--Dada una rutina y un gimnasta, obtener el resumen de rutina que es una tupla con el nombre de la misma, 
+--los kilos perdidos y la tonificación ganada por dicho gimnasta al realizarla.
+
+--PUNTO 5--
+
+
 
 
 
