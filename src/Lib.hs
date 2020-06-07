@@ -109,6 +109,29 @@ montania inclinacion gimnasta minutos = tonificar 0 (+1) (colina (inclinacion + 
 
 --PUNTO 4--
 
+--1--
+
+data Rutina = Rutina {
+nombreRutina :: String,
+duracionRutina :: Float,
+listaDeEjercicios :: [Ejercicio]
+} deriving (Show)
+
+listaDeEjercicioDefault :: [Ejercicio]
+listaDeEjercicioDefault = [caminataEnCinta, entrenamientoEnCinta, pesas 50, colina 20, montania 30]
+
+--Un ejemplo de uso es hacer diferentes tipos de  rutina de ejercicios con nombre para aplicarsela a algun gimnasta--
+
+rutinaFlaca = Rutina "Rutina Flaca" 3 [caminataEnCinta]
+
+rutinaTeHagoVerga = Rutina "Rutina te hago verga" 120 listaDeEjercicioDefault
+
+--aplicarRutinaJugador :: Rutina -> Gimnasta -> Gimnasta
+--aplicarRutinaJugador rutina gimnasta= foldr ($) gimnasta (listaDeEjercicios rutina)
+
+
+ 
+
 
 
 
