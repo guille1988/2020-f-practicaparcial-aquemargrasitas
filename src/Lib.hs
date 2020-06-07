@@ -129,17 +129,6 @@ rutinaTeHagoVerga = Rutina "Rutina te hago verga" 120 listaDeEjercicioDefault
 
 --2)
 --Solucion recursiva
-{-
-modificarParte :: Parte -> Parte
-modificarParte unaParte = unaParte {defensa = defensa unaParte + 1 }
-
-defensaParte :: [Parte] -> [Parte]
-defensaParte [] = []
-defensaParte [x] = modificarParte x : []
-defensaParte (x:y:xs) = modificarParte x : y : defensaParte xs
-solucionRecursiva :: Rutina -> Gimnasta -> Gimnasta
-solucionRecursiva rutina gimnasta 
--}
 
 aplicarRutinaRecursivaJugador :: [Ejercicio] -> Gimnasta -> Minutos -> Gimnasta
 aplicarRutinaRecursivaJugador [] gimnasta minutos = gimnasta 
@@ -147,7 +136,7 @@ aplicarRutinaRecursivaJugador [x] gimnasta minutos = x  gimnasta minutos
 aplicarRutinaRecursivaJugador (x:xs) gimnasta minutos = aplicarRutinaRecursivaJugador xs (x gimnasta minutos) minutos
 
 solucionRecursiva :: Rutina -> Gimnasta -> Gimnasta
-solucionRecursiva rutina gimnasta = aplicarRutinaRecursivaJugador (listaDeEjercicios rutina) gimnasta (duracionRutina rutina)
+solucionRecursiva rutina gimnasta = aplicarRutinaRecursivaJugador (listaDeEjercicios rutina) gimnasta (cantidadDeMinutosDedicadaACadaEjercicio rutina)
 
 --3)
 --Solucion con fold
@@ -165,7 +154,11 @@ cantidadDeMinutosDedicadaACadaEjercicio rutina = (duracionRutina rutina) / (from
 --Dada una rutina y un gimnasta, obtener el resumen de rutina que es una tupla con el nombre de la misma, 
 --los kilos perdidos y la tonificación ganada por dicho gimnasta al realizarla.
 
+resumenRutina :: Rutina -> Gimnasta -> (String, Float, Float)
+resumenRutina rutina gimnasta = (nombreRutina rutina, ((peso gimnasta) - (peso (aplicarRutinaJugador rutina gimnasta))), - (((coeficienteTonificacion gimnasta) - (coeficienteTonificacion (aplicarRutinaJugador rutina gimnasta)))))
+
 --PUNTO 5--
+
 
 
 
