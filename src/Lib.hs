@@ -135,8 +135,8 @@ aplicarRutinaRecursivaJugador [] gimnasta minutos = gimnasta
 aplicarRutinaRecursivaJugador [x] gimnasta minutos = x  gimnasta minutos
 aplicarRutinaRecursivaJugador (x:xs) gimnasta minutos = aplicarRutinaRecursivaJugador xs (x gimnasta minutos) minutos
 
-solucionRecursiva :: Rutina -> Gimnasta -> Gimnasta
-solucionRecursiva rutina gimnasta = aplicarRutinaRecursivaJugador (listaDeEjercicios rutina) gimnasta (cantidadDeMinutosDedicadaACadaEjercicio rutina)
+solucionRecursiva :: Gimnasta -> Rutina -> Gimnasta
+solucionRecursiva gimnasta rutina = aplicarRutinaRecursivaJugador (listaDeEjercicios rutina) gimnasta (cantidadDeMinutosDedicadaACadaEjercicio rutina)
 
 --3)
 --Solucion con fold
@@ -150,18 +150,31 @@ hacerEjercicio rutina ejercicio gimnasta = ejercicio gimnasta (cantidadDeMinutos
 cantidadDeMinutosDedicadaACadaEjercicio rutina = (duracionRutina rutina) / (fromIntegral.length) (listaDeEjercicios rutina)
 
 --B--
+type Resumen = (String,Float,Float)
 
---Dada una rutina y un gimnasta, obtener el resumen de rutina que es una tupla con el nombre de la misma, 
---los kilos perdidos y la tonificación ganada por dicho gimnasta al realizarla.
-
-resumenRutina :: Rutina -> Gimnasta -> (String, Float, Float)
-resumenRutina rutina gimnasta = (nombreRutina rutina, ((peso gimnasta) - (peso (aplicarRutinaJugador rutina gimnasta))), - (((coeficienteTonificacion gimnasta) - (coeficienteTonificacion (aplicarRutinaJugador rutina gimnasta)))))
+resumenRutina :: Gimnasta -> Rutina -> Resumen
+resumenRutina gimnasta rutina = (nombreRutina rutina, ((peso gimnasta) - (peso (aplicarRutinaJugador rutina gimnasta))), abs (((coeficienteTonificacion gimnasta) - (coeficienteTonificacion (aplicarRutinaJugador rutina gimnasta)))))
 
 --PUNTO 5--
 
+--Dada una lista de rutinas, obtener un resumen de todas las que (individualmente) pueden llevar a un gimnasta dado a estar saludable.
 
+resumenListaDeRutinasAplicadasAunGimnasta :: [Rutina] -> Gimnasta -> [Resumen]
+resumenListaDeRutinasAplicadasAunGimnasta listaDeRutinas gimnasta = map (resumenRutina gimnasta) listaDeRutinas
 
+filtradoDeRutinas :: [Resumen] -> Gimnasta -> [Resumen]
+filtradoDeRutinas listaDeResumenes gimnasta = filter (filtrarResumenesSaludables gimnasta) listaDeResumenes
 
+filtrarResumenesSaludables :: Gimnasta -> Resumen -> Bool
+filtrarResumenesSaludables gimnasta resumen = (((peso gimnasta) - (segundo resumen)) > 100) &&  ((trd resumen) > 5) 
+
+trd (a,b,c) = c
+segundo (a,b,c) = b
+
+loHaceSaludable :: [Rutina] -> Gimnasta -> [Resumen]
+loHaceSaludable listaDeRutinas gimnasta = filtradoDeRutinas (resumenListaDeRutinasAplicadasAunGimnasta listaDeRutinas gimnasta) gimnasta
+
+--THE END--
 
 
 
